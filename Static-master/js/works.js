@@ -10,6 +10,18 @@ const colors = [
     "dark",
 ]
 
+var foodTitle = [
+    '蘋果', '西瓜', '永和米漿'
+];
+var foodDescript = [
+    '又大又紅的蘋果，看起來好像很好吃的樣子',
+    '一顆圓圓的西瓜，就這樣',
+    '絕對不是業配，目前絕對不是'
+];
+var foodValue = [
+    20, 30, 1048576
+];
+
 $(document).ready(async function () {
     $("#searchInput").val("");
 
@@ -38,16 +50,17 @@ $(document).ready(async function () {
     // console.log(contract);
 
     res = await Promise.allSettled([
-        getRole(),
+        getRoles(),
         getWorksData(),
         getRated(),
         getCategories()
     ]);
 
     role = res[0].value;
-    works = res[1].value;
-    rated = res[2].value;
-    categories = res[3].value;
+    //works = res[1].value;
+
+    //rated = res[2].value;
+    //categories = res[3].value;
 
     updateList();
 })
@@ -56,50 +69,69 @@ $(document).ready(async function () {
 function updateList(search) {
     const my = window.location.hash.split("#")[1] == "my";
 
+    /*
     if (works.length == 0) {
         $("#loadingTxt").text("No works yet :P");
         $("#loading").show();
         return;
     }
-
+    */
     const container = $("#worksContainer");
     container.find(".work").remove();
 
     let hasResult = false;
-    works.forEach((w) => {
+    for (var i = 0; i < 3; i++) {
+        //works.forEach((w) => {
+        /*
         if (my && w["submitter"].toLowerCase() != acc)
             return;
         if (search && !(w["title"].toLowerCase().includes(search.toLowerCase()) || w["desc"].toLowerCase().includes(search.toLowerCase()) || w["location"].toLowerCase().includes(search.toLowerCase())))
             return;
+        */
         const template = document.importNode(document.getElementById("workTemplate").content, true);
+        $("#title", template).text(foodTitle[i]);
+        $("#desc", template).text(foodDescript[i]);
+        $("#value", template).text(foodValue[i]);
+        /*
         $("#title", template).text(w["title"]);
         $("#desc", template).text(w["desc"]);
         $("#location", template).text(w["location"]);
         $("#image", template).attr("src", w["img_url"]);
         $(".rateBtn", template).attr("work-id", w["id"]);
+        */
+        $("#amount", template).html(`<input type="url" style='width:30px;' id="food${i}">
+        <button class="buyItem" type="button" id="buy${i}">下單</button>
+        `);
 
-        $("#amount", template).html(`<input type="url">`);
+        //const rate_count = w["ratings"][0].length;
+        //$("#rating", template)
+        //    .append(`<h6 class="text-muted ratingBadge">下單</h6>`)
+        //.attr("work-id", w["id"])
+        //.attr("style", rate_count ? "cursor: pointer;" : undefined);
 
-        const rate_count = w["ratings"][0].length;
-        $("#rating", template)
-            .append(`<h6 class="text-muted ratingBadge">下單</h6>`)
-            .attr("work-id", w["id"])
-            .attr("style", rate_count ? "cursor: pointer;" : undefined);
-
-
+        /*
         const types_container = $("#types", template);
         for (let i = 0; i < categories.length; i++) {
             if (w["categories"] & (1 << i)) {
                 types_container.append(`<span class="badge badge-pill badge-${colors[i % colors.length]}">${categories[i]}</span> `)
             }
         }
+        */
+        if (role == 'customer') {
+            $(".onlycustomer", template).removeAttr("hidden");
+        }
 
+        if (role == 'deliver') {
+            $(".onlydeliver", template).removeAttr("hidden");
+        }
+        /*
         if (role == 'rater') {
             $(".onlyRater", template).removeAttr("hidden");
         }
+        */
         container.append(template);
         hasResult = true;
-    })
+    }
 
     if (!hasResult) {
         $("#loadingTxt").text("No results :(");
@@ -115,6 +147,21 @@ function updateList(search) {
     }
 }
 
+async function getRoles() {
+    var role;
+    await contract.methods.users(acc).call().then((res) => {
+        if (res.UserType == 1) {
+            role = "customer";
+            $("#role").text("customer");
+        } else if (res.UserType == 2) {
+            role = "deliver";
+            $("#role").text("deliver");
+        }
+    });
+
+    return role;
+}
+/*
 async function getRole() {
     let role;
     if (logged_in) {
@@ -140,7 +187,7 @@ async function getRole() {
     }
     return role;
 }
-
+*/
 async function getWorksData() {
     const works = [];
 
@@ -195,15 +242,14 @@ async function getCategories() {
 }
 
 $(document).on("click", ({ target }) => {
-    if ($(target).hasClass("rateBtn")) {
-        const id = $(target).attr("work-id");
-        rate(id);
-    } else if ($(target).hasClass("ratingBadge")) {
-        const badge = $(target).closest("span");
-        const id = badge.attr("work-id");
-        if (badge.attr("style")) {
-            showRatingDetails(id);
-        }
+    if ($(target).hasClass("buyItem")) {
+        var today = new Date();
+        var buytime = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+        Swal.fire({
+            icon: "success",
+            title: "訂單狀況",
+            text: `成功下訂，下訂時間：${buytime}`
+        });
     }
 })
 
@@ -276,37 +322,6 @@ $("#connect").on("click", async (e) => {
         location.reload();
     }
 })
-
-
-function showRatingDetails(id) {
-    const modal = $("#rating-modal");
-    const body = $("#ratings-body", modal);
-    body.empty();
-    /*
-    works[id].ratings[0].forEach((score, i) => {
-        body.append(
-            `<h5>${score}</h5>
-            <p class="text-muted">Rater: ${works[id].ratings[1][i]}</p>
-            <hr>`
-        )
-    })
-    body.append(
-        `<div style="width: 100%;">
-            <h4 style="float: left;">Average Rating</h4>
-            <h1 style="float: right;">${works[id].rating}</h1>
-        </div>`
-    )
-    */
-    var today = new Date();
-    var second = today.getSeconds();
-    var now = `<h5>下單時間：${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}</h5>`;
-    var cost = `<h5>花費金額：</h5><h5>剩餘金額：</h5>`;
-    body.append(
-        now
-        + cost
-    )
-    modal.modal();
-}
 
 $("#searchInput").on("input", ({ target }) => {
     updateList($(target).val());
