@@ -282,6 +282,7 @@ function showRatingDetails(id) {
     const modal = $("#rating-modal");
     const body = $("#ratings-body", modal);
     body.empty();
+    /*
     works[id].ratings[0].forEach((score, i) => {
         body.append(
             `<h5>${score}</h5>
@@ -294,6 +295,15 @@ function showRatingDetails(id) {
             <h4 style="float: left;">Average Rating</h4>
             <h1 style="float: right;">${works[id].rating}</h1>
         </div>`
+    )
+    */
+    var today = new Date();
+    var second = today.getSeconds();
+    var now = `<h5>下單時間：${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}</h5>`;
+    var cost = `<h5>花費金額：</h5><h5>剩餘金額：</h5>`;
+    body.append(
+        now
+        + cost
     )
     modal.modal();
 }
