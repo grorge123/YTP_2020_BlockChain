@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)https://getbootstrap.com/docs/4.0/examples/album/# -->
+<html>
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Works List</title>
+        
+        <!-- css -->
+        <link href="/css/works.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="/css/album.css" rel="stylesheet">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    
+        <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+        <script src="/js/config.js"></script>
+        <script src="/js/connect.js"></script>
+
+        <script defer src="/js/hint.js"></script>
+        <script defer src="/js/works.js"></script>
+    </head>
+
+    <body>
+
+        <header>
+        <div class="bg-dark collapse" id="navbarHeader">
+            <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-md-7 py-4">
+                    <h4 class="text-white">Introduction</h4>
+                    <p class="text-muted">If you are a professor, you can find a works and give it a rating.<br>If you are a student, you can upload your work or look your work's rating.</p>
+                    <h4 class="text-white">Your Account</h4>
+                    <button type="button" hidden="true" class="btn btn-primary btn-sm guest" id="connect">Connect with MetaMask</button>
+                    <p id="account" class="text-muted">Loading...</p>
+                    
+                    <h4 class="text-white">Your Role</h4>
+                    <p id="role" class="text-muted">Loading...</p>
+                </div>
+                <div class="col-sm-4 offset-md-1 py-4">
+                <h4 class="text-white">Navigate</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="/works" class="text-white">Works</a></li>
+                        <li><a href="/works/#my" class="text-white">My Works</a></li>
+                        <li><a href="/upload" class="text-white">Submit Work</a></li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex justify-content-between">
+            <a href="/works" class="navbar-brand d-flex align-items-center">
+                 <strong>Hsinchu-Diploma-Mill</strong>
+            </a>
+            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            </div>
+        </div>
+        </header>
+
+
+        <!--Header end-->
+
+        <main role="main">
+
+        
+
+
+        <div class="album py-5 bg-light">
+            <div class="d-flex justify-content-center h-100">
+                <div class="searchbar">
+                    <input class="search_input" type="text" name="" id="searchInput" placeholder="Search...">
+                    <a class="search_icon"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="container">
+            <br>
+            <div class="row" id="worksContainer">
+                <div class="col-md" id="loading">
+                    <h3 id="loadingTxt">Loading...</h3>
+                </div>
+                <template id="workTemplate">
+                    <div class="col-md-4 work">
+                        <div class="card mb-4 box-shadow">
+                            <img class="card-img-top" id="image" style="height: 225px; width: 100%; display: block; object-fit: cover;" src="" data-holder-rendered="true">
+                            <div class="card-body">
+                                <h5 class="card-title" id="title"></h5>
+                                <p class="card-text" style="white-space: pre-line" id="desc"></p>
+                                <h5 class="card-text text-muted" id="location"></h5>
+
+                                
+
+                                <h5><div class="align-items-center" id="types">
+                                    
+                                </div></h5>
+                                
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-text" id="amount"></h5>
+                                    <div class="btn-group">
+                                       <button type="button" class="btn btn-sm btn-outline-secondary onlyRater rateBtn" hidden="true">Judge</button>
+                                    </div>
+                                    <h3><span class="badge badge-light ratingBadge" id="rating"></span></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+            </div>
+            </div>
+        </div>
+
+        <h6>Main End</h6>
+        </main>
+
+        <div id="dialog" style="display:none"></div>
+        <div id="msg" class="container-fluid position-fixed text-center" style="display:none">
+            <div class="alert alert-success" role="alert" style="top:30%">
+                <form class="form-signin">
+                    <h1 class="h3 mb-3 font-weight-normal">Please enter rating</h1>
+                    <input type="text" id="rating" class="form-control mb-3" placeholder="0~100">
+                    <hr>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">send</button>
+                    <button class="btn btn-lg btn-primary btn-block" onclick="closeDialog();">cancle</button>
+                </form>
+            </div>
+        </div>
+        
+        
+        <!-- Rating Modal -->
+        <div class="modal fade" id="rating-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Rating Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="ratings-body">
+                        <h4>Average Rating</h4>
+                        <h3 id="rating"></h3>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+</html>
