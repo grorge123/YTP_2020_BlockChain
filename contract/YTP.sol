@@ -20,10 +20,11 @@ contract DecentralizeDelivery {
         uint set_time;
         uint cnt_num;
         address user;
+		string name;
     }
     struct User{
         uint money;//錢
-        uint UserType;//使用者類型
+        uint UserType;//使用者類型 1 = 使用者, 2 = 外送員
         coordinate where;//使用者位置
         uint[] bought;//買賣紀錄
     }
@@ -36,7 +37,7 @@ contract DecentralizeDelivery {
     uint Food_cnt = 0;
     mapping (uint => Food) public FoodList;
     Food[] uncheck;
-    mapping (address => User) public users;
+    mapping (address => User) public users	;
     address[] worked;
     TranslateImformation[] TranslateList;
     mapping (address => uint[]) finishwork;

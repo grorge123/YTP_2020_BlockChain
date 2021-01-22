@@ -19,7 +19,7 @@ var foodDescript = [
     '絕對不是業配，目前絕對不是'
 ];
 var foodValue = [
-    20, 30, 1048576
+    20, 30, 76
 ];
 
 var foodSrc = [
@@ -27,6 +27,9 @@ var foodSrc = [
     '../img/watermelon.png',
     '../img/ricedrink.png'
 ]
+
+var foodX = [10, 20, 50];
+var foodY = [17, 91, 17];
 
 $(document).ready(async function () {
     $("#searchInput").val("");
@@ -78,7 +81,10 @@ function updateList(search) {
         $("#title", template).text(foodTitle[i]);
         $("#desc", template).text(foodDescript[i]);
         $("#value", template).text(foodValue[i]);
-        $("#amount", template).html(`<input type="text" style='width:30px;' id="food${i}">
+        $("#value", template).append("元/每份餐點");
+        var locate = `位置：(${foodX[i]},${foodY[i]})`;
+        $("#location", template).text(locate);
+        $("#amount", template).html(`<input type="text" style='width:30px;' id="food${i}" value="0">
         <button class="buyItem" type="button" id="buy${i}">下單</button>
         `);
         $("#image", template).attr("src", foodSrc[i]);
@@ -207,11 +213,21 @@ $(document).on("click", ({ target }) => {
     if ($(target).hasClass("buyItem")) {
         var today = new Date();
         var buytime = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+        var itembuy = parseInt(target.id[3]);
+        var foodid = "food" + itembuy;
+        var itemnumber = parseInt(document.getElementById(foodid).value);
+        var cost = foodValue[itembuy] * itemnumber;
         Swal.fire({
             icon: "success",
             title: "訂單狀況",
-            text: `成功下訂，下訂時間：${buytime}`
+            text: `成功下訂${foodTitle[itembuy]}，下訂時間：${buytime}訂單金額：${cost}元`
         });
+
+        contract.methods.call().then((user) => {
+            var userx = user.where.x;
+            var usery = user.where.y;
+            contract.methods.buildFood(foodX[itembuy], foodY[itembuy], userx, usery, cost, today.getTime());
+        })
 
     }
 })

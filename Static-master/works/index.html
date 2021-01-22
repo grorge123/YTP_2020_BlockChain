@@ -26,7 +26,6 @@
         <script defer src="/js/hint.js"></script>
         <script defer src="/js/works.js"></script>
     </head>
-
     <body>
 
         <header>
@@ -34,13 +33,13 @@
             <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-md-7 py-4">
-                    <h4 class="text-white">Introduction</h4>
-                    <p class="text-muted">If you are a professor, you can find a works and give it a rating.<br>If you are a student, you can upload your work or look your work's rating.</p>
-                    <h4 class="text-white">Your Account</h4>
+                    <h4 class="text-white">介紹</h4>
+                    <p class="text-muted">這是一個去中心化美食外送的系統<br>如果你支持本系統，歡迎小額贊助</p>
+                    <h4 class="text-white">你的帳戶</h4>
                     <button type="button" hidden="true" class="btn btn-primary btn-sm guest" id="connect">Connect with MetaMask</button>
                     <p id="account" class="text-muted">Loading...</p>
                     
-                    <h4 class="text-white">Your Role</h4>
+                    <h4 class="text-white">你的身分</h4>
                     <p id="role" class="text-muted">Loading...</p>
                 </div>
                 <div class="col-sm-4 offset-md-1 py-4">
@@ -58,7 +57,7 @@
         <div class="navbar navbar-dark bg-dark box-shadow">
             <div class="container d-flex justify-content-between">
             <a href="/works" class="navbar-brand d-flex align-items-center">
-                 <strong>Hsinchu-Diploma-Mill</strong>
+                 <strong>去中心化平台實作系統</strong>
             </a>
             <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -69,12 +68,48 @@
 
 
         <!--Header end-->
-
+        <br>
         <main role="main">
+        <div class="onlycustomer">
+            <div class="d-flex justify-content-center h-100">
+                <div class="searchbar">
+                    <input class="search_input" type="text" name="" id="searchInput" placeholder="Search...">
+                    <a class="search_icon"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="container">
+                <br>
+                <div class="row" id="worksContainer">
+                    <div class="col-md" id="loading">
+                        <h3 id="loadingTxt">Loading...</h3>
+                    </div>
+                    <template id="workTemplate">
+                        <div class="col-md-4 work">
+                            <div class="card mb-4 box-shadow">
+                                <div class="card-body">
+                                    <img class="card-img-top" id="image" style="height: 225px; width: 100%;" src="">
+                                    <h5 class="card-title" id="title"></h5>
+                                    <p class="card-text" style="white-space: pre-line" id="desc"></p>
+                                    <h5 class="card-text" id="value"></h5>
+                                    <h5 class="card-text" id="location"></h5>
+                                    <div class="flex" id="amount"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
 
-        
-
-
+                </div>
+            </div>
+        </div>
+        <div class="onlydeliver" hidden="true">
+            <div class="d-flex justify-content-center h-100">
+                <div class="searchbar">
+                    <input class="search_input" type="text" name="" id="searchInput" placeholder="Search...">
+                    <a class="search_icon"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+        </div>
+        <!--
         <div class="album py-5 bg-light">
             <div class="d-flex justify-content-center h-100">
                 <div class="searchbar">
@@ -95,7 +130,6 @@
                             <div class="card-body">
                                 <h5 class="card-title" id="title"></h5>
                                 <p class="card-text" style="white-space: pre-line" id="desc"></p>
-                                <h5 class="card-text text-muted" id="location"></h5>
 
                                 
 
@@ -118,44 +152,10 @@
             </div>
             </div>
         </div>
-
-        <h6>Main End</h6>
+        -->
         </main>
 
-        <div id="dialog" style="display:none"></div>
-        <div id="msg" class="container-fluid position-fixed text-center" style="display:none">
-            <div class="alert alert-success" role="alert" style="top:30%">
-                <form class="form-signin">
-                    <h1 class="h3 mb-3 font-weight-normal">Please enter rating</h1>
-                    <input type="text" id="rating" class="form-control mb-3" placeholder="0~100">
-                    <hr>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">send</button>
-                    <button class="btn btn-lg btn-primary btn-block" onclick="closeDialog();">cancle</button>
-                </form>
-            </div>
-        </div>
         
-        
-        <!-- Rating Modal -->
-        <div class="modal fade" id="rating-modal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Rating Details</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" id="ratings-body">
-                        <h4>Average Rating</h4>
-                        <h3 id="rating"></h3>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
         
     </body>
 </html>
