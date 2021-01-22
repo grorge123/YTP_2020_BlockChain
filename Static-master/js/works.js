@@ -22,6 +22,12 @@ var foodValue = [
     20, 30, 1048576
 ];
 
+var foodSrc = [
+    '../img/apple.png',
+    '../img/watermelon.png',
+    '../img/ricedrink.png'
+]
+
 $(document).ready(async function () {
     $("#searchInput").val("");
 
@@ -57,66 +63,26 @@ $(document).ready(async function () {
     ]);
 
     role = res[0].value;
-    //works = res[1].value;
-
-    //rated = res[2].value;
-    //categories = res[3].value;
-
     updateList();
 })
 
 
 function updateList(search) {
     const my = window.location.hash.split("#")[1] == "my";
-
-    /*
-    if (works.length == 0) {
-        $("#loadingTxt").text("No works yet :P");
-        $("#loading").show();
-        return;
-    }
-    */
     const container = $("#worksContainer");
     container.find(".work").remove();
 
     let hasResult = false;
     for (var i = 0; i < 3; i++) {
-        //works.forEach((w) => {
-        /*
-        if (my && w["submitter"].toLowerCase() != acc)
-            return;
-        if (search && !(w["title"].toLowerCase().includes(search.toLowerCase()) || w["desc"].toLowerCase().includes(search.toLowerCase()) || w["location"].toLowerCase().includes(search.toLowerCase())))
-            return;
-        */
         const template = document.importNode(document.getElementById("workTemplate").content, true);
         $("#title", template).text(foodTitle[i]);
         $("#desc", template).text(foodDescript[i]);
         $("#value", template).text(foodValue[i]);
-        /*
-        $("#title", template).text(w["title"]);
-        $("#desc", template).text(w["desc"]);
-        $("#location", template).text(w["location"]);
-        $("#image", template).attr("src", w["img_url"]);
-        $(".rateBtn", template).attr("work-id", w["id"]);
-        */
-        $("#amount", template).html(`<input type="url" style='width:30px;' id="food${i}">
+        $("#amount", template).html(`<input type="text" style='width:30px;' id="food${i}">
         <button class="buyItem" type="button" id="buy${i}">下單</button>
         `);
+        $("#image", template).attr("src", foodSrc[i]);
 
-        //const rate_count = w["ratings"][0].length;
-        //$("#rating", template)
-        //    .append(`<h6 class="text-muted ratingBadge">下單</h6>`)
-        //.attr("work-id", w["id"])
-        //.attr("style", rate_count ? "cursor: pointer;" : undefined);
-
-        /*
-        const types_container = $("#types", template);
-        for (let i = 0; i < categories.length; i++) {
-            if (w["categories"] & (1 << i)) {
-                types_container.append(`<span class="badge badge-pill badge-${colors[i % colors.length]}">${categories[i]}</span> `)
-            }
-        }
-        */
         if (role == 'customer') {
             $(".onlycustomer", template).removeAttr("hidden");
         }
@@ -124,11 +90,7 @@ function updateList(search) {
         if (role == 'deliver') {
             $(".onlydeliver", template).removeAttr("hidden");
         }
-        /*
-        if (role == 'rater') {
-            $(".onlyRater", template).removeAttr("hidden");
-        }
-        */
+
         container.append(template);
         hasResult = true;
     }
@@ -250,6 +212,7 @@ $(document).on("click", ({ target }) => {
             title: "訂單狀況",
             text: `成功下訂，下訂時間：${buytime}`
         });
+
     }
 })
 
