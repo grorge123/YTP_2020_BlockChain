@@ -1,5 +1,173 @@
 [
 	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "x",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "y",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct DecentralizeDelivery.coordinate",
+				"name": "a",
+				"type": "tuple"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "x",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "y",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct DecentralizeDelivery.coordinate",
+				"name": "b",
+				"type": "tuple"
+			}
+		],
+		"name": "Distance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "Find_money",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "cnt",
+				"type": "uint256"
+			}
+		],
+		"name": "FollowFood",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "FoodList",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "x",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "y",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct DecentralizeDelivery.coordinate",
+				"name": "From",
+				"type": "tuple"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "x",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "y",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct DecentralizeDelivery.coordinate",
+				"name": "To",
+				"type": "tuple"
+			},
+			{
+				"internalType": "uint256",
+				"name": "money",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "deliver_cnt",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "get",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "finish",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "set_time",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "cnt_num",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -15,84 +183,32 @@
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			}
-		],
-		"name": "addCategory",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
 				"name": "addr",
 				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "points",
+				"name": "_money",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "categories",
+				"name": "_UserType",
 				"type": "uint256"
-			}
-		],
-		"name": "addRater",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "addr",
-				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "points",
+				"name": "_x",
 				"type": "uint256"
-			}
-		],
-		"name": "addRaterPoints",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "addr",
-				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "points",
+				"name": "_y",
 				"type": "uint256"
 			}
 		],
-		"name": "delRaterPoints",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "addr",
-				"type": "address"
-			}
-		],
-		"name": "disableRater",
+		"name": "adduser",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -101,259 +217,166 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			}
-		],
-		"name": "editCategory",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "addr",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "categories",
-				"type": "uint256"
-			}
-		],
-		"name": "editRaterCategories",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "addr",
-				"type": "address"
-			}
-		],
-		"name": "enableRater",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "work_id",
+				"name": "FX",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "rating",
+				"name": "FY",
 				"type": "uint256"
-			}
-		],
-		"name": "rateWork",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "addr",
-				"type": "address"
-			}
-		],
-		"name": "removeAdmin",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "addr",
-				"type": "address"
-			}
-		],
-		"name": "removeRater",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "addr",
-				"type": "address"
-			}
-		],
-		"name": "revokeRater",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_title",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_desc",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_img_url",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_location",
-				"type": "string"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_categories",
+				"name": "TX",
 				"type": "uint256"
-			}
-		],
-		"name": "uploadWork",
-		"outputs": [
+			},
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "TY",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_money",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_time",
 				"type": "uint256"
 			}
 		],
+		"name": "buildFood",
+		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
+		"name": "destroy",
+		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "category_name",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getCategories",
-		"outputs": [
-			{
-				"internalType": "string[]",
-				"name": "",
-				"type": "string[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "addr",
-				"type": "address"
-			}
-		],
-		"name": "getRaterData",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "valid",
-				"type": "bool"
-			},
-			{
-				"internalType": "uint256",
-				"name": "points",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "used_points",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "categories",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "work_id",
+				"name": "now_time",
 				"type": "uint256"
 			}
 		],
-		"name": "getRatings",
+		"name": "findwork",
 		"outputs": [
 			{
-				"internalType": "uint256[]",
+				"components": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "x",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "y",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct DecentralizeDelivery.coordinate",
+						"name": "From",
+						"type": "tuple"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "x",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "y",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct DecentralizeDelivery.coordinate",
+						"name": "To",
+						"type": "tuple"
+					},
+					{
+						"internalType": "uint256",
+						"name": "money",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address[]",
+						"name": "deliver",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deliver_cnt",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "get",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "finish",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "set_time",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "cnt_num",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					}
+				],
+				"internalType": "struct DecentralizeDelivery.Food[10]",
 				"name": "",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "address[]",
-				"name": "",
-				"type": "address[]"
+				"type": "tuple[10]"
 			}
 		],
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "getRole",
-		"outputs": [
+		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
+				"name": "cnt",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "finish",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "cnt",
+				"type": "uint256"
+			}
+		],
+		"name": "getwork",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -381,56 +404,16 @@
 				"internalType": "address",
 				"name": "addr",
 				"type": "address"
-			}
-		],
-		"name": "ratedWorks",
-		"outputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "raters",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "valid",
-				"type": "bool"
-			},
-			{
-				"internalType": "bool",
-				"name": "disabled",
-				"type": "bool"
 			},
 			{
 				"internalType": "uint256",
-				"name": "points",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "used_points",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "categories",
+				"name": "money",
 				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "setmoney",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -439,114 +422,114 @@
 				"internalType": "address",
 				"name": "addr",
 				"type": "address"
-			}
-		],
-		"name": "raterValid",
-		"outputs": [
+			},
 			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
+				"internalType": "uint256",
+				"name": "money",
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "transmoney",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "addr",
+				"name": "other",
 				"type": "address"
-			}
-		],
-		"name": "submittedWorks",
-		"outputs": [
+			},
 			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
+				"internalType": "uint256",
+				"name": "cnt",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "x",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "y",
+				"type": "uint256"
 			}
 		],
-		"stateMutability": "view",
+		"name": "transorder",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_x",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_y",
+				"type": "uint256"
+			}
+		],
+		"name": "updateXY",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "workCount",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
+		"name": "update_unwork",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "update_work",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "work_id",
-				"type": "uint256"
-			}
-		],
-		"name": "workExists",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "works",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "title",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "categories",
-				"type": "uint256"
-			},
 			{
 				"internalType": "address",
-				"name": "submitter",
+				"name": "",
 				"type": "address"
+			}
+		],
+		"name": "users",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "money",
+				"type": "uint256"
 			},
 			{
-				"internalType": "string",
-				"name": "desc",
-				"type": "string"
+				"internalType": "uint256",
+				"name": "UserType",
+				"type": "uint256"
 			},
 			{
-				"internalType": "string",
-				"name": "img_url",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "location",
-				"type": "string"
-			},
-			{
-				"internalType": "bool",
-				"name": "exists",
-				"type": "bool"
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "x",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "y",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct DecentralizeDelivery.coordinate",
+				"name": "where",
+				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",
