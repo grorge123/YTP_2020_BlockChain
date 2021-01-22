@@ -76,30 +76,30 @@ function updateList(search) {
     container.find(".work").remove();
 
     let hasResult = false;
-    for (var i = 0; i < 3; i++) {
-        const template = document.importNode(document.getElementById("workTemplate").content, true);
-        $("#title", template).text(foodTitle[i]);
-        $("#desc", template).text(foodDescript[i]);
-        $("#value", template).text(foodValue[i]);
-        $("#value", template).append("元/每份餐點");
-        var locate = `位置：(${foodX[i]},${foodY[i]})`;
-        $("#location", template).text(locate);
-        $("#amount", template).html(`<input type="text" style='width:30px;' id="food${i}" value="0">
-        <button class="buyItem" type="button" id="buy${i}">下單</button>
-        `);
-        $("#image", template).attr("src", foodSrc[i]);
-
-        if (role == 'customer') {
+    if (role == "customer") {
+        for (var i = 0; i < 3; i++) {
+            const template = document.importNode(document.getElementById("workTemplate").content, true);
+            $("#title", template).text(foodTitle[i]);
+            $("#desc", template).text(foodDescript[i]);
+            $("#value", template).text(foodValue[i]);
+            $("#value", template).append("元/每份餐點");
+            var locate = `位置：(${foodX[i]},${foodY[i]})`;
+            $("#location", template).text(locate);
+            $("#amount", template).html(`<input type="text" style='width:30px;' id="food${i}" value="0">
+            <button class="buyItem" type="button" id="buy${i}">下單</button>
+            `);
+            $("#image", template).attr("src", foodSrc[i]);
             $(".onlycustomer", template).removeAttr("hidden");
+            container.append(template);
+            hasResult = true;
         }
+    } else if (role == "deliver") {
+        const template = document.importNode(document.getElementById("deliverWorkTemplate").context, true);
 
-        if (role == 'deliver') {
-            $(".onlydeliver", template).removeAttr("hidden");
-        }
-
-        container.append(template);
-        hasResult = true;
+        $(".onlydeliver", template).removeAttr("hidden");
+        $("#deliverloading").hide();
     }
+
 
     if (!hasResult) {
         $("#loadingTxt").text("No results :(");
@@ -129,33 +129,7 @@ async function getRoles() {
 
     return role;
 }
-/*
-async function getRole() {
-    let role;
-    if (logged_in) {
-        await contract.methods.getRole().call().then((res) => {
-            if (res == 2) {
-                role = "admin";
-                $("#role").text("Admin");
-            } else if (res == 1) {
-                role = "rater";
-                contract.methods.raters(acc).call().then((r) => {
-                    rater_points = r.points;
-                    rater_disabled = r.disabled;
-                    $("#role").text(`Professor ${rater_disabled ? "(Disabled)" : ""} with ${rater_points} points`);
-                })
-            } else {
-                role = "student";
-                $("#role").text("Student");
-            }
-        })
-    } else {
-        $("#role").text("Guest");
-        role = "guest";
-    }
-    return role;
-}
-*/
+
 async function getWorksData() {
     const works = [];
 
