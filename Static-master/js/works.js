@@ -85,8 +85,14 @@ function updateList(search) {
             $("#value", template).append("元/每份餐點");
             var locate = `位置：(${foodX[i]},${foodY[i]})`;
             $("#location", template).text(locate);
-            $("#amount", template).html(`<input type="text" style='width:30px;' id="food${i}" value="0">
-            <button class="buyItem" type="button" id="buy${i}">下單</button>
+            $("#amount", template).html(`
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="欲購買數量" aria-label="欲購買數量" aria-describedby="basic-addon2" id="food${i}">
+                <div class="input-group-append">
+                    <button class="buyItem btn btn-outline-secondary" type="button" id="buy${i}">下單</button>
+                </div>
+            </div>
             `);
             $("#image", template).attr("src", foodSrc[i]);
             $(".onlycustomer", template).removeAttr("hidden");
@@ -95,9 +101,22 @@ function updateList(search) {
         }
     } else if (role == "deliver") {
         const template = document.importNode(document.getElementById("deliverWorkTemplate").context, true);
-
-        $(".onlydeliver", template).removeAttr("hidden");
-        $("#deliverloading").hide();
+        for (; ;) {
+            $(".onlydeliver", template).removeAttr("hidden");
+            $("#deliverloading").hide();
+            if (!hasResult) {
+                $("#loadingTxt").text("No results :(");
+                $("#loading").show();
+            } else {
+                $("#loading").hide();
+                // Disable rated buttons
+                if (role == 'rater') {
+                    rated.forEach((id) => {
+                        $(`.rateBtn[work-id='${id}']`).text("Rated").attr("disabled", true);
+                    })
+                }
+            }
+        }
     }
 
 
@@ -192,15 +211,47 @@ $(document).on("click", ({ target }) => {
         var itemnumber = parseInt(document.getElementById(foodid).value);
         var cost = foodValue[itembuy] * itemnumber;
         Swal.fire({
-            icon: "success",
+            icon: "question",
             title: "訂單狀況",
-            text: `成功下訂${foodTitle[itembuy]}，下訂時間：${buytime}訂單金額：${cost}元`
+            text: `正在下訂${foodTitle[itembuy]}，下訂時間：${buytime}訂單金額：${cost}元，請等待交易`
         });
 
-        contract.methods.call().then((user) => {
+        contract.methods.users(acc).call().then((user) => {
             var userx = user.where.x;
             var usery = user.where.y;
-            contract.methods.buildFood(foodX[itembuy], foodY[itembuy], userx, usery, cost, today.getTime());
+            contract.methods.buildFood(foodX[itembuy], foodY[itembuy], userx, usery, cost, today.getTime()).send({
+                from: acc
+            })
+                .once('transactionHash', (hash) => {
+                    $(Swal.getFooter()).html(`<div style="text-align: center;"><a>Your trasaction is being processed...</a><br><a href="https://ropsten.etherscan.io/tx/${hash}">View transaction on Etherscan</a></div>`).attr("style", "display: flex;")
+                })
+                .then((receipt) => {
+                    console.log(receipt)
+                    Swal.fire({
+                        icon: 'success',
+                        text: '訂單成功建立',
+                        footer: `<a href="https://ropsten.etherscan.io/tx/${receipt.transactionHash}">View transaction on Etherscan</a>`
+                    }).then(() => {
+                        location.href = "/works"
+                    })
+                })
+                .catch((err) => {
+                    console.log(err);
+                    if (err.code == 4001) { // User denied
+                        Swal.showValidationMessage(
+                            "你取消了此筆訂單"
+                        )
+                    } else {
+                        Swal.showValidationMessage(
+                            "交易失敗!!!<br>View transaction on Etherscan for details"
+                        )
+                        Swal.fire({
+                            icon: 'error',
+                            text: '交易失敗!!',
+                            footer: `<a href="https://ropsten.etherscan.io/tx/${err.transactionHash}">View on Etherscan for more details</a>`
+                        })
+                    }
+                });
         })
 
     }
