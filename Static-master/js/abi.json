@@ -162,6 +162,11 @@
 				"internalType": "address",
 				"name": "user",
 				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -244,6 +249,11 @@
 				"internalType": "uint256",
 				"name": "_time",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_foodname",
+				"type": "string"
 			}
 		],
 		"name": "buildFood",
@@ -343,6 +353,11 @@
 						"internalType": "address",
 						"name": "user",
 						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
 					}
 				],
 				"internalType": "struct DecentralizeDelivery.Food[10]",
@@ -364,6 +379,25 @@
 		"name": "finish",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			}
+		],
+		"name": "getbought",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
