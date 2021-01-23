@@ -68,7 +68,58 @@ $(document).ready(async function () {
     role = res[0].value;
     updateList();
 })
-
+let deliverhasResult = false;
+function update_deliver() {
+    $("#deliverContainer").html(`
+    <br>
+    <div class="col-md" id="deliverloading">
+    <h3 id="deliverloadingTxt">Loading...</h3>
+    </div>
+    
+    <template id="deliverWorkTemplate">
+    <div class="col-md-4 work">
+    <div class="card mb-4 box-shadow">
+    <div class="card-body">
+    <h5 class="card-text" id="itemName"></h5>
+    <h5 class="card-text" id="itemValue"></h5>
+    <h5 class="card-text" id="itemDest"></h5>
+    <div class="card-text" id="button"></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </template>
+    `);
+    var now = new Date();
+    const deliverContainer = $("#deliverContainer");
+    contract.methods.findwork(now.getTime()).call().then((workArray) => {
+        workArray.forEach((index) => {
+            if (index["user"] != "0x0000000000000000000000000000000000000000") {
+                const template = document.importNode(document.getElementById("deliverWorkTemplate").content, true);
+                $("#itemName", template).text(index["name"]);
+                console.log(index["money"]);
+                $("#itemValue", template).text(`${index["money"]}元`);
+                $("#itemDest", template).text(`(${index["To"].x},${index["To"].y})`);
+                $("#button", template).html(`<button type="button" class="btn btn-secondary" id="${index["cnt_number"]}">接單</button>`);
+                deliverContainer.append(template);
+                deliverhasResult = true;
+            }
+        });
+        $("#deliverloading").hide();
+        if (!deliverhasResult) {
+            $("#deliverloadingTxt").text("No results :(");
+            $("#deliverloading").show();
+        } else {
+            $("#deliverloading").hide();
+            // Disable rated buttons
+            if (role == 'rater') {
+                rated.forEach((id) => {
+                    $(`.rateBtn[work-id='${id}']`).text("Rated").attr("disabled", true);
+                })
+            }
+        }
+    })
+}
 
 function updateList(search) {
     const my = window.location.hash.split("#")[1] == "my";
@@ -86,7 +137,6 @@ function updateList(search) {
             var locate = `位置：(${foodX[i]},${foodY[i]})`;
             $("#location", template).text(locate);
             $("#amount", template).html(`
-
             <div class="input-group mb-3">
                 <input type="text" class="form-control" placeholder="欲購買數量" aria-label="欲購買數量" aria-describedby="basic-addon2" id="food${i}">
                 <div class="input-group-append">
@@ -99,21 +149,6 @@ function updateList(search) {
             container.append(template);
             hasResult = true;
         }
-    } else if (role == "deliver") {
-        const template = document.importNode(document.getElementById("deliverWorkTemplate").content, true);
-        var now = new Date();
-        workArray = contract.methods.findwork(now.getTime()).call();
-        workArray.then((work) => {
-            work.forEach((index) => {
-                $("#itemName", template).text(index["name"]);
-                $("#itemValue", template).text(index["money"]);
-                $("#itemDest", template).text(`(${index["To"].x},${index["To"].y})`);
-                $("#button", template).html(`<button type="button" class="btn btn-secondary" id="${index["cnt_number"]}">接單</button>`);
-
-            })
-        })
-        $(".onlydeliver", template).removeAttr("hidden");
-        $("#deliverloading").hide();
         if (!hasResult) {
             $("#loadingTxt").text("No results :(");
             $("#loading").show();
@@ -126,22 +161,13 @@ function updateList(search) {
                 })
             }
         }
-
+    } else if (role == "deliver") {
+        update_deliver();
+        setInterval(
+            update_deliver
+            , 10000);
     }
 
-
-    if (!hasResult) {
-        $("#loadingTxt").text("No results :(");
-        $("#loading").show();
-    } else {
-        $("#loading").hide();
-        // Disable rated buttons
-        if (role == 'rater') {
-            rated.forEach((id) => {
-                $(`.rateBtn[work-id='${id}']`).text("Rated").attr("disabled", true);
-            })
-        }
-    }
 }
 
 async function getRoles() {
