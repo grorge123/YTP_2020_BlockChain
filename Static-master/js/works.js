@@ -100,23 +100,33 @@ function updateList(search) {
             hasResult = true;
         }
     } else if (role == "deliver") {
-        const template = document.importNode(document.getElementById("deliverWorkTemplate").context, true);
-        for (; ;) {
-            $(".onlydeliver", template).removeAttr("hidden");
-            $("#deliverloading").hide();
-            if (!hasResult) {
-                $("#loadingTxt").text("No results :(");
-                $("#loading").show();
-            } else {
-                $("#loading").hide();
-                // Disable rated buttons
-                if (role == 'rater') {
-                    rated.forEach((id) => {
-                        $(`.rateBtn[work-id='${id}']`).text("Rated").attr("disabled", true);
-                    })
-                }
+        const template = document.importNode(document.getElementById("deliverWorkTemplate").content, true);
+        var now = new Date();
+        workArray = contract.methods.findwork(now.getTime()).call();
+        workArray.then((work) => {
+            work.forEach((index) => {
+                $("#itemName", template).text(index["name"]);
+                $("#itemValue", template).text(index["money"]);
+                $("#itemDest", template).text(`(${index["To"].x},${index["To"].y})`);
+                $("#button", template).html(`<button type="button" class="btn btn-secondary" id="${index["cnt_number"]}">接單</button>`);
+
+            })
+        })
+        $(".onlydeliver", template).removeAttr("hidden");
+        $("#deliverloading").hide();
+        if (!hasResult) {
+            $("#loadingTxt").text("No results :(");
+            $("#loading").show();
+        } else {
+            $("#loading").hide();
+            // Disable rated buttons
+            if (role == 'rater') {
+                rated.forEach((id) => {
+                    $(`.rateBtn[work-id='${id}']`).text("Rated").attr("disabled", true);
+                })
             }
         }
+
     }
 
 
@@ -219,7 +229,7 @@ $(document).on("click", ({ target }) => {
         contract.methods.users(acc).call().then((user) => {
             var userx = user.where.x;
             var usery = user.where.y;
-            contract.methods.buildFood(foodX[itembuy], foodY[itembuy], userx, usery, cost, today.getTime()).send({
+            contract.methods.buildFood(foodX[itembuy], foodY[itembuy], userx, usery, cost, today.getTime(), foodTitle[itembuy]).send({
                 from: acc
             })
                 .once('transactionHash', (hash) => {
