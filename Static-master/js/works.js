@@ -97,10 +97,10 @@ function update_deliver() {
             if (index["user"] != "0x0000000000000000000000000000000000000000") {
                 const template = document.importNode(document.getElementById("deliverWorkTemplate").content, true);
                 $("#itemName", template).text(index["name"]);
-                console.log(index["money"]);
+                //console.log(index["money"]);
                 $("#itemValue", template).text(`${index["money"]}元`);
                 $("#itemDest", template).text(`(${index["To"].x},${index["To"].y})`);
-                $("#button", template).html(`<button type="button" class="btn btn-secondary" id="${index["cnt_number"]}">接單</button>`);
+                $("#button", template).html(`<button type="button" class="btn btn-secondary getWork" id="${index["cnt_number"]}">接單</button>`);
                 deliverContainer.append(template);
                 deliverhasResult = true;
             }
@@ -289,6 +289,18 @@ $(document).on("click", ({ target }) => {
                     }
                 });
         })
+
+    } else if ($(target).hasClass("getWork")) {
+        var id = target.id;
+        var money = target["money"];
+        var today = new Date();
+        var gettime = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+
+        Swal.fire({
+            icon: "question",
+            title: "訂單狀況",
+            text: `正在接單，單號：${target.id}，下訂時間：${gettime}訂單金額：${money}元，請等待交易`
+        });
 
     }
 })
