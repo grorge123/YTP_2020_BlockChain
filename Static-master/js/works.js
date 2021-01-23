@@ -10,6 +10,27 @@ const colors = [
     "dark",
 ]
 
+var foodTitle = [
+    '蘋果', '西瓜', '永和米漿'
+];
+var foodDescript = [
+    '又大又紅的蘋果，看起來好像很好吃的樣子',
+    '一顆圓圓的西瓜，就這樣',
+    '絕對不是業配，目前絕對不是'
+];
+var foodValue = [
+    20, 30, 76
+];
+
+var foodSrc = [
+    '../img/apple.png',
+    '../img/watermelon.png',
+    '../img/ricedrink.png'
+]
+
+var foodX = [10, 20, 50];
+var foodY = [17, 91, 17];
+
 $(document).ready(async function () {
     $("#searchInput").val("");
 
@@ -38,68 +59,47 @@ $(document).ready(async function () {
     // console.log(contract);
 
     res = await Promise.allSettled([
-        getRole(),
+        getRoles(),
         getWorksData(),
         getRated(),
         getCategories()
     ]);
 
     role = res[0].value;
-    works = res[1].value;
-    rated = res[2].value;
-    categories = res[3].value;
-
     updateList();
 })
 
 
 function updateList(search) {
     const my = window.location.hash.split("#")[1] == "my";
-
-    if (works.length == 0) {
-        $("#loadingTxt").text("No works yet :P");
-        $("#loading").show();
-        return;
-    }
-
     const container = $("#worksContainer");
     container.find(".work").remove();
 
     let hasResult = false;
-    works.forEach((w) => {
-        if (my && w["submitter"].toLowerCase() != acc)
-            return;
-        if (search && !(w["title"].toLowerCase().includes(search.toLowerCase()) || w["desc"].toLowerCase().includes(search.toLowerCase()) || w["location"].toLowerCase().includes(search.toLowerCase())))
-            return;
-        const template = document.importNode(document.getElementById("workTemplate").content, true);
-        $("#title", template).text(w["title"]);
-        $("#desc", template).text(w["desc"]);
-        $("#location", template).text(w["location"]);
-        $("#image", template).attr("src", w["img_url"]);
-        $(".rateBtn", template).attr("work-id", w["id"]);
-
-        $("#amount", template).html(`<input type="url">`);
-
-        const rate_count = w["ratings"][0].length;
-        $("#rating", template)
-            .append(`<h6 class="text-muted ratingBadge">下單</h6>`)
-            .attr("work-id", w["id"])
-            .attr("style", rate_count ? "cursor: pointer;" : undefined);
-
-
-        const types_container = $("#types", template);
-        for (let i = 0; i < categories.length; i++) {
-            if (w["categories"] & (1 << i)) {
-                types_container.append(`<span class="badge badge-pill badge-${colors[i % colors.length]}">${categories[i]}</span> `)
-            }
+    if (role == "customer") {
+        for (var i = 0; i < 3; i++) {
+            const template = document.importNode(document.getElementById("workTemplate").content, true);
+            $("#title", template).text(foodTitle[i]);
+            $("#desc", template).text(foodDescript[i]);
+            $("#value", template).text(foodValue[i]);
+            $("#value", template).append("元/每份餐點");
+            var locate = `位置：(${foodX[i]},${foodY[i]})`;
+            $("#location", template).text(locate);
+            $("#amount", template).html(`<input type="text" style='width:30px;' id="food${i}" value="0">
+            <button class="buyItem" type="button" id="buy${i}">下單</button>
+            `);
+            $("#image", template).attr("src", foodSrc[i]);
+            $(".onlycustomer", template).removeAttr("hidden");
+            container.append(template);
+            hasResult = true;
         }
+    } else if (role == "deliver") {
+        const template = document.importNode(document.getElementById("deliverWorkTemplate").context, true);
 
-        if (role == 'rater') {
-            $(".onlyRater", template).removeAttr("hidden");
-        }
-        container.append(template);
-        hasResult = true;
-    })
+        $(".onlydeliver", template).removeAttr("hidden");
+        $("#deliverloading").hide();
+    }
+
 
     if (!hasResult) {
         $("#loadingTxt").text("No results :(");
@@ -115,29 +115,18 @@ function updateList(search) {
     }
 }
 
-async function getRole() {
-    let role;
-    if (logged_in) {
-        await contract.methods.getRole().call().then((res) => {
-            if (res == 2) {
-                role = "admin";
-                $("#role").text("Admin");
-            } else if (res == 1) {
-                role = "rater";
-                contract.methods.raters(acc).call().then((r) => {
-                    rater_points = r.points;
-                    rater_disabled = r.disabled;
-                    $("#role").text(`Professor ${rater_disabled ? "(Disabled)" : ""} with ${rater_points} points`);
-                })
-            } else {
-                role = "student";
-                $("#role").text("Student");
-            }
-        })
-    } else {
-        $("#role").text("Guest");
-        role = "guest";
-    }
+async function getRoles() {
+    var role;
+    await contract.methods.users(acc).call().then((res) => {
+        if (res.UserType == 1) {
+            role = "customer";
+            $("#role").text("customer");
+        } else if (res.UserType == 2) {
+            role = "deliver";
+            $("#role").text("deliver");
+        }
+    });
+
     return role;
 }
 
@@ -195,15 +184,25 @@ async function getCategories() {
 }
 
 $(document).on("click", ({ target }) => {
-    if ($(target).hasClass("rateBtn")) {
-        const id = $(target).attr("work-id");
-        rate(id);
-    } else if ($(target).hasClass("ratingBadge")) {
-        const badge = $(target).closest("span");
-        const id = badge.attr("work-id");
-        if (badge.attr("style")) {
-            showRatingDetails(id);
-        }
+    if ($(target).hasClass("buyItem")) {
+        var today = new Date();
+        var buytime = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+        var itembuy = parseInt(target.id[3]);
+        var foodid = "food" + itembuy;
+        var itemnumber = parseInt(document.getElementById(foodid).value);
+        var cost = foodValue[itembuy] * itemnumber;
+        Swal.fire({
+            icon: "success",
+            title: "訂單狀況",
+            text: `成功下訂${foodTitle[itembuy]}，下訂時間：${buytime}訂單金額：${cost}元`
+        });
+
+        contract.methods.call().then((user) => {
+            var userx = user.where.x;
+            var usery = user.where.y;
+            contract.methods.buildFood(foodX[itembuy], foodY[itembuy], userx, usery, cost, today.getTime());
+        })
+
     }
 })
 
@@ -276,27 +275,6 @@ $("#connect").on("click", async (e) => {
         location.reload();
     }
 })
-
-
-function showRatingDetails(id) {
-    const modal = $("#rating-modal");
-    const body = $("#ratings-body", modal);
-    body.empty();
-    works[id].ratings[0].forEach((score, i) => {
-        body.append(
-            `<h5>${score}</h5>
-            <p class="text-muted">Rater: ${works[id].ratings[1][i]}</p>
-            <hr>`
-        )
-    })
-    body.append(
-        `<div style="width: 100%;">
-            <h4 style="float: left;">Average Rating</h4>
-            <h1 style="float: right;">${works[id].rating}</h1>
-        </div>`
-    )
-    modal.modal();
-}
 
 $("#searchInput").on("input", ({ target }) => {
     updateList($(target).val());
