@@ -196,6 +196,12 @@ function updateList(search) {
             })
         })
     } else if (role == "deliver") {
+        contract.methods.users(acc).call().then((user) => {
+            x = user.where.x;
+            y = user.where.y;
+            document.getElementById("nowLocation").innerHTML = `<h4 class="col md-2" id="nowLocation">現在位置：(${x},${y})</h4>`
+        })
+
         update_deliver();
         setInterval(
             update_deliver
@@ -441,6 +447,26 @@ $(document).on("click", ({ target }) => {
                 var nowy = user.where.y;
                 contract.methods.transorder(nextAddress, id, nowx, nowy).send({ from: acc });
             })
+        })
+    } else if ($(target).hasClass("updateLocation")) {
+        Swal.fire({
+            title: '手動輸入X與Y',
+            html:
+                `<h3>X座標</h3><input id="swal-input1" class="swal2-input"><br><h3>Y座標</h3><input id="swal-input2" class="swal2-input">`,
+            focusConfirm: false,
+            preConfirm: () => {
+                return [
+                    document.getElementById('swal-input1').value,
+                    document.getElementById('swal-input2').value
+                ]
+            }
+        }).then((locate) => {
+            console.log(locate);
+            var x = parseInt(locate.value[0]);
+            var y = parseInt(locate.value[1]);
+
+            contract.methods.updateXY(x, y).send({ from: acc });
+
         })
     }
 })
