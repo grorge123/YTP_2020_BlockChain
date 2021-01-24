@@ -263,10 +263,10 @@ function updateList(search) {
 async function getRoles() {
     var role;
     await contract.methods.users(acc).call().then((res) => {
-        if(res.UserType == 0){
+        if (res.UserType == 0) {
             role = "guest";
             $("#role").text("guest");
-        }else if (res.UserType == 1) {
+        } else if (res.UserType == 1) {
             role = "customer";
             $("#role").text("customer");
         } else if (res.UserType == 2) {
@@ -434,7 +434,7 @@ $(document).on("click", ({ target }) => {
     } else if ($(target).hasClass("translate")) {
         var id = target.id;
         Swal.fire({
-            title: '輸入下一個外送員之地址',
+            title: '輸入下一個外送員之名稱',
             input: 'text',
             inputPlaceholder: '下一個外送員',
             showCancelButton: true,
@@ -444,7 +444,7 @@ $(document).on("click", ({ target }) => {
                 }
             }
         }).then((nextAddress) => {
-            console.log(nextAddress);
+            // console.log(nextAddress);
             contract.methods.users(nextAddress).call({ from: acc }).then((user) => {
                 var nowx = user.where.x;
                 var nowy = user.where.y;
