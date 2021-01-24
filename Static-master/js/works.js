@@ -163,8 +163,8 @@ function updateList(search) {
         }
         contract.methods.getbought(acc).call().then((deliverList) => {
             const container = $("#deliverlist")
-            List = Object.value(deliverList);
-            List.forEach((index) => {
+            // List = Object.value(deliverList);
+            deliverList.forEach((index) => {
                 const template = document.importNode(document.getElementById("deliverlists").content, true);
                 $("#orderID", template).text(index);
                 contract.methods.FoodList(index).call().then((list) => {
@@ -173,9 +173,15 @@ function updateList(search) {
                     $("#orderLocate", template).text(`(${nowx},${nowy})`);
                     $("#orderName", template).text(list.name);
                     $("#orderMoney", template).text(list.money);
-                    $("#orderStatus", template).html(`
-                    <button class="finishBuy btn btn-outline-secondary" type="button" id="${list.cnt_num}">完成</button>
-                    `)
+                    if (list.finish != true && list.get == true) {
+                        $("#orderStatus", template).html(`
+                        <button class="finishBuy btn btn-outline-secondary" type="button" id="${list.cnt_num}">完成</button>
+                        `)
+                    } else if (list.finish) {
+                        $("#orderStatus", template).text("已完成")
+                    } else if (!list.get) {
+                        $("#orderStatus", template).text("尚未接單")
+                    }
                     container.append(template);
                 })
 
