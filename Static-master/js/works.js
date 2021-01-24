@@ -211,7 +211,7 @@ function updateList(search) {
             // List = Object.value(deliverList);
             deliverList.forEach((index) => {
                 contract.methods.getdeliver(index).call({ from: acc }).then((sendArray) => {
-                    console.log(sendArray[sendArray.length - 1].toLowerCase(), acc.toLowerCase())
+                    // console.log(sendArray[sendArray.length - 1].toLowerCase(), acc.toLowerCase())
                     const template = document.importNode(document.getElementById("delivers-lists").content, true);
                     $("#deliverOrderID", template).text(index);
                     contract.methods.FoodList(index).call().then((list) => {
@@ -445,10 +445,10 @@ $(document).on("click", ({ target }) => {
             }
         }).then((nextAddress) => {
             // console.log(nextAddress);
-            contract.methods.users(nextAddress).call({ from: acc }).then((user) => {
+            contract.methods.users(acc).call().then((user) => {
                 var nowx = user.where.x;
                 var nowy = user.where.y;
-                contract.methods.transorder(nextAddress, id, nowx, nowy).send({ from: acc });
+                contract.methods.transorder(nextAddress.value, id, nowx, nowy).send({ from: acc });
             })
         })
     } else if ($(target).hasClass("updateLocation")) {
@@ -464,7 +464,6 @@ $(document).on("click", ({ target }) => {
                 ]
             }
         }).then((locate) => {
-            console.log(locate);
             var x = parseInt(locate.value[0]);
             var y = parseInt(locate.value[1]);
 
