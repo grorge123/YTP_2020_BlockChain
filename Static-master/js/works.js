@@ -263,7 +263,10 @@ function updateList(search) {
 async function getRoles() {
     var role;
     await contract.methods.users(acc).call().then((res) => {
-        if (res.UserType == 1) {
+        if(res.UserType == 0){
+            role = "guest";
+            $("#role").text("guest");
+        }else if (res.UserType == 1) {
             role = "customer";
             $("#role").text("customer");
         } else if (res.UserType == 2) {
