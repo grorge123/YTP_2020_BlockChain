@@ -63,14 +63,18 @@ $(document).ready(async function () {
         getRated(),
         getCategories()
     ]);
-
-    contract.methods.users(acc).call().then(users => {
-        money = users.money;
-        $("#gold").text(money);
-    })
-
-    role = res[0].value;
-    updateList();
+    if(await getAccount()){
+        contract.methods.users(acc).call().then(users => {
+            money = users.money;
+            $("#gold").text(money);
+        })
+    
+        role = res[0].value;
+        updateList();
+    }else{
+        role = "guest";
+        updateList();
+    }
 })
 let deliverhasResult = false;
 function update_deliver() {
@@ -196,6 +200,29 @@ function updateList(search) {
         setInterval(
             update_deliver
             , 10000);
+    } else if (role == "guest"){
+        for (var i = 0; i < 3; i++) {
+            const template = document.importNode(document.getElementById("workTemplate").content, true);
+            $("#title", template).text(foodTitle[i]);
+            $("#desc", template).text(foodDescript[i]);
+            $("#value", template).text(foodValue[i]);
+            $("#value", template).append("元/每份餐點");
+            var locate = `位置：(${foodX[i]},${foodY[i]})`;
+            $("#location", template).text(locate);
+            
+            $("#image", template).attr("src", foodSrc[i]);
+            $(".onlycustomer", template).removeAttr("hidden");
+            container.append(template);
+            hasResult = true;
+        }
+        if (!hasResult) {
+            $("#loadingTxt").text("No results :(");
+            $("#loading").show();
+        } else {
+            $("#loading").hide();
+            // Disable rated buttons
+            
+        }
     }
 
 }

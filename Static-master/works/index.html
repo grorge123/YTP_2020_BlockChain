@@ -185,11 +185,11 @@
         <script>
         function show() {
             for(var i = 0; i < 100; i++) {
-                if (role == "customer") {
+                if (role == "customer" || role == "guest") {
                     $(".onlycustomer").removeAttr("hidden");
                 } else if (role == "deliver") {
                     $(".onlydeliver").removeAttr("hidden");
-                }
+                } 
             }
         }
         setTimeout(show, 1000)
