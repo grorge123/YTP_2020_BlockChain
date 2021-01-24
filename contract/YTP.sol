@@ -63,6 +63,10 @@ contract DecentralizeDelivery {
     function getbought(address addr) public view returns(uint[] memory){
         return users[addr].bought;
     }
+    
+    function getdeliver(uint cnt) public view returns(address[] memory){
+        return FoodList[cnt].deliver;
+    }
 
     function Find_money() view public returns(uint){
         return users[msg.sender].money;
@@ -158,6 +162,7 @@ contract DecentralizeDelivery {
         require(users[msg.sender].money > get.money, "You don't have enough money to get this order");
         FoodList[get.cnt_num].deliver.push(msg.sender);
         FoodList[get.cnt_num].get = true;
+        users[msg.sender].bought.push(cnt);
         users[msg.sender].money -= get.money;
         
     }
@@ -167,6 +172,7 @@ contract DecentralizeDelivery {
         FoodList[cnt].deliver.push(other);
         users[msg.sender].money += FoodList[cnt].money;
         users[other].money -= FoodList[cnt].money;
+        users[other].bought.push(cnt);
         TranslateImformation memory TI;
         TI.where.x = x;
         TI.where.y = y;
