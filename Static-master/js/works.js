@@ -63,15 +63,15 @@ $(document).ready(async function () {
         getRated(),
         getCategories()
     ]);
-    if(await getAccount()){
+    if (await getAccount()) {
         contract.methods.users(acc).call().then(users => {
             money = users.money;
             $("#gold").text(money);
         })
-    
+
         role = res[0].value;
         updateList();
-    }else{
+    } else {
         role = "guest";
         updateList();
     }
@@ -200,7 +200,34 @@ function updateList(search) {
         setInterval(
             update_deliver
             , 10000);
-    } else if (role == "guest"){
+        contract.methods.getbought(acc).call().then((deliverList) => {
+            const container = $("#delivers-list")
+            // List = Object.value(deliverList);
+            deliverList.forEach((index) => {
+                contract.methods.getdeliver(index).call({ from: acc }).then((sendArray) => {
+                    console.log(sendArray[sendArray.length - 1].toLowerCase(), acc.toLowerCase())
+                    const template = document.importNode(document.getElementById("delivers-lists").content, true);
+                    $("#deliverOrderID", template).text(index);
+                    contract.methods.FoodList(index).call().then((list) => {
+                        var nowx = list.From.x;
+                        var nowy = list.From.y;
+                        $("#deliverOrderLocate", template).text(`(${nowx},${nowy})`);
+                        $("#deliverOrderName", template).text(list.name);
+                        $("#deliverOrderMoney", template).text(list.money);
+                        if (list.finish != true && list.get == true) {
+                            $("#deliverOrderStatus", template).html(`
+                                <button class="translate btn btn-outline-secondary" type="button" id="${list.cnt_num}">轉單</button>
+                                `)
+                        }
+                        if (sendArray[sendArray.length - 1].toLowerCase() == acc.toLowerCase() && !list.finish) {
+                            container.append(template);
+                        }
+                    })
+                })
+
+            })
+        })
+    } else if (role == "guest") {
         for (var i = 0; i < 3; i++) {
             const template = document.importNode(document.getElementById("workTemplate").content, true);
             $("#title", template).text(foodTitle[i]);
@@ -209,7 +236,7 @@ function updateList(search) {
             $("#value", template).append("元/每份餐點");
             var locate = `位置：(${foodX[i]},${foodY[i]})`;
             $("#location", template).text(locate);
-            
+
             $("#image", template).attr("src", foodSrc[i]);
             $(".onlycustomer", template).removeAttr("hidden");
             container.append(template);
@@ -221,7 +248,7 @@ function updateList(search) {
         } else {
             $("#loading").hide();
             // Disable rated buttons
-            
+
         }
     }
 
@@ -395,6 +422,26 @@ $(document).on("click", ({ target }) => {
                     })
                 }
             });
+    } else if ($(target).hasClass("translate")) {
+        var id = target.id;
+        Swal.fire({
+            title: '輸入下一個外送員之地址',
+            input: 'text',
+            inputPlaceholder: '下一個外送員',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return '你需要輸入值'
+                }
+            }
+        }).then((nextAddress) => {
+            console.log(nextAddress);
+            contract.methods.users(nextAddress).call({ from: acc }).then((user) => {
+                var nowx = user.where.x;
+                var nowy = user.where.y;
+                contract.methods.transorder(nextAddress, id, nowx, nowy).send({ from: acc });
+            })
+        })
     }
 })
 
