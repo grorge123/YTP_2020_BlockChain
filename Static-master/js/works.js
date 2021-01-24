@@ -181,7 +181,6 @@ async function getRoles() {
             $("#role").text("deliver");
         }
     });
-
     return role;
 }
 
