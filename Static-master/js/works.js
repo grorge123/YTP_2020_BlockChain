@@ -161,21 +161,24 @@ function updateList(search) {
                 })
             }
         }
-        contract.methods.getbought(acc).call((deliverList) => {
-            console.log(deliverList);
-            deliverList.forEach((index) => {
-                const template = document.importNode(document.getElementById("deliverlist").content, true);
-                $("orderID", template).text(index);
-                contract.methods.FoodList(index).call((list) => {
+        contract.methods.getbought(acc).call().then((deliverList) => {
+            const container = $("#deliverlist")
+            List = Object.keys(deliverList);
+            List.forEach((index) => {
+                const template = document.importNode(document.getElementById("deliverlists").content, true);
+                $("#orderID", template).text(index);
+                contract.methods.FoodList(index).call().then((list) => {
                     var nowx = list.From.x;
                     var nowy = list.From.y;
-                    $("orderLocate", template).text(`(${nowx},${nowy})`);
-                    $("orderName", template).text(list.name);
-                    $("orderMoney", template).text(list.money);
-                    $("orderStatus", template).html(`
-                    <button class="buyItem btn btn-outline-secondary" type="button" id="${list.cnt_number}">完成</button>
+                    $("#orderLocate", template).text(`(${nowx},${nowy})`);
+                    $("#orderName", template).text(list.name);
+                    $("#orderMoney", template).text(list.money);
+                    $("#orderStatus", template).html(`
+                    <button class="finishBuy btn btn-outline-secondary" type="button" id="${list.cnt_num}">完成</button>
                     `)
+                    container.append(template);
                 })
+
             })
         })
     } else if (role == "deliver") {
@@ -317,7 +320,41 @@ $(document).on("click", ({ target }) => {
             title: "訂單狀況",
             text: `正在接單，單號：${target.id}，下訂時間：${gettime}訂單金額：${money}元，請等待交易`
         });
-
+    } else if ($(target).hasClass("finishBuy")) {
+        var id = target.id;
+        contract.methods.finish(id).send({
+            from: acc
+        })
+            .once('transactionHash', (hash) => {
+                $(Swal.getFooter()).html(`<div style="text-align: center;"><a>Your trasaction is being processed...</a><br><a href="https://ropsten.etherscan.io/tx/${hash}">View transaction on Etherscan</a></div>`).attr("style", "display: flex;")
+            })
+            .then((receipt) => {
+                console.log(receipt)
+                Swal.fire({
+                    icon: 'success',
+                    text: '訂單成功完成',
+                    footer: `<a href="https://ropsten.etherscan.io/tx/${receipt.transactionHash}">View transaction on Etherscan</a>`
+                }).then(() => {
+                    location.href = "/works"
+                })
+            })
+            .catch((err) => {
+                console.log(err);
+                if (err.code == 4001) { // User denied
+                    Swal.showValidationMessage(
+                        "你取消完成"
+                    )
+                } else {
+                    Swal.showValidationMessage(
+                        "交易失敗!!!<br>View transaction on Etherscan for details"
+                    )
+                    Swal.fire({
+                        icon: 'error',
+                        text: '交易失敗!!',
+                        footer: `<a href="https://ropsten.etherscan.io/tx/${err.transactionHash}">View on Etherscan for more details</a>`
+                    })
+                }
+            });
     }
 })
 
