@@ -161,6 +161,23 @@ function updateList(search) {
                 })
             }
         }
+        contract.methods.getbought(acc).call((deliverList) => {
+            console.log(deliverList);
+            deliverList.forEach((index) => {
+                const template = document.importNode(document.getElementById("deliverlist").content, true);
+                $("orderID", template).text(index);
+                contract.methods.FoodList(index).call((list) => {
+                    var nowx = list.From.x;
+                    var nowy = list.From.y;
+                    $("orderLocate", template).text(`(${nowx},${nowy})`);
+                    $("orderName", template).text(list.name);
+                    $("orderMoney", template).text(list.money);
+                    $("orderStatus", template).html(`
+                    <button class="buyItem btn btn-outline-secondary" type="button" id="${list.cnt_number}">完成</button>
+                    `)
+                })
+            })
+        })
     } else if (role == "deliver") {
         update_deliver();
         setInterval(
