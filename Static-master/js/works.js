@@ -422,6 +422,26 @@ $(document).on("click", ({ target }) => {
                     })
                 }
             });
+    } else if ($(target).hasClass("translate")) {
+        var id = target.id;
+        Swal.fire({
+            title: '輸入下一個外送員之地址',
+            input: 'text',
+            inputPlaceholder: '下一個外送員',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                if (!value) {
+                    return '你需要輸入值'
+                }
+            }
+        }).then((nextAddress) => {
+            console.log(nextAddress);
+            contract.methods.users(nextAddress).call({ from: acc }).then((user) => {
+                var nowx = user.where.x;
+                var nowy = user.where.y;
+                contract.methods.transorder(nextAddress, id, nowx, nowy).send({ from: acc });
+            })
+        })
     }
 })
 
