@@ -23,6 +23,7 @@ contract DecentralizeDelivery {
         string name;
     }
     struct User{
+        string name;
         uint money;
         uint UserType;
         coordinate where;
@@ -38,6 +39,8 @@ contract DecentralizeDelivery {
     mapping (uint => Food) public FoodList;
     Food[] uncheck;
     mapping (address => User) public users;
+    mapping (string => address) name_to_addr;
+    mapping (address => string) addr_to_name;
     address[] worked;
     TranslateImformation[] TranslateList;
     mapping (address => uint[]) finishwork;
@@ -82,11 +85,14 @@ contract DecentralizeDelivery {
         users[msg.sender].money -= money;
     }
     
-    function adduser(address addr, uint _money, uint _UserType, uint _x, uint _y) onlyAdmin() public {
+    function adduser(address addr, uint _money, uint _UserType, uint _x, uint _y, string memory _username) onlyAdmin() public {
         users[addr].money = _money;
         users[addr].UserType = _UserType;
         users[addr].where.x = _x;
         users[addr].where.y = _y;
+        users[addr].name = _username;
+        addr_to_name[addr] = _username;
+        name_to_addr[_username] = addr;
     }
     
     function updateXY(uint _x, uint _y) public{
@@ -167,7 +173,10 @@ contract DecentralizeDelivery {
         
     }
     
-    function transorder(address other, uint cnt, uint x, uint y) public {
+    function transorder(string memory name, uint cnt, uint x, uint y) public {
+        require((name_to_addr[name] != address(0x0)), "name not exists");
+        address other = name_to_addr[name];
+        require(FoodList[cnt].deliver.length != 0, "this order not get");
         require(FoodList[cnt].deliver[FoodList[cnt].deliver.length - 1] == msg.sender, "You are not this order deliver");
         FoodList[cnt].deliver.push(other);
         users[msg.sender].money += FoodList[cnt].money;

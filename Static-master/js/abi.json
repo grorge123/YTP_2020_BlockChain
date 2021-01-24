@@ -211,6 +211,11 @@
 				"internalType": "uint256",
 				"name": "_y",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_username",
+				"type": "string"
 			}
 		],
 		"name": "adduser",
@@ -490,9 +495,9 @@
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "other",
-				"type": "address"
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
 			},
 			{
 				"internalType": "uint256",
@@ -557,6 +562,11 @@
 		],
 		"name": "users",
 		"outputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
 			{
 				"internalType": "uint256",
 				"name": "money",
