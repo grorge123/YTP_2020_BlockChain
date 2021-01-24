@@ -100,7 +100,7 @@ function update_deliver() {
                 //console.log(index["money"]);
                 $("#itemValue", template).text(`${index["money"]}元`);
                 $("#itemDest", template).text(`(${index["To"].x},${index["To"].y})`);
-                $("#button", template).html(`<button type="button" class="btn btn-secondary getWork" id="${index["cnt_number"]}">接單</button>`);
+                $("#button", template).html(`<button type="button" class="btn btn-secondary getWork" id="${index["cnt_num"]}">接單</button>`);
                 deliverContainer.append(template);
                 deliverhasResult = true;
             }
@@ -163,7 +163,7 @@ function updateList(search) {
         }
         contract.methods.getbought(acc).call().then((deliverList) => {
             const container = $("#deliverlist")
-            List = Object.keys(deliverList);
+            List = Object.value(deliverList);
             List.forEach((index) => {
                 const template = document.importNode(document.getElementById("deliverlists").content, true);
                 $("#orderID", template).text(index);
@@ -311,14 +311,17 @@ $(document).on("click", ({ target }) => {
 
     } else if ($(target).hasClass("getWork")) {
         var id = target.id;
-        var money = target["money"];
         var today = new Date();
         var gettime = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
 
         Swal.fire({
             icon: "question",
             title: "訂單狀況",
-            text: `正在接單，單號：${target.id}，下訂時間：${gettime}訂單金額：${money}元，請等待交易`
+            text: `正在接單，單號：${target.id}，下訂時間：${gettime}，請等待交易`
+        });
+
+        contract.methods.getwork(id).send({
+            from: acc
         });
     } else if ($(target).hasClass("finishBuy")) {
         var id = target.id;
