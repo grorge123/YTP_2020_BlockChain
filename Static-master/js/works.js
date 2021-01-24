@@ -30,7 +30,6 @@ var foodSrc = [
 
 var foodX = [10, 20, 50];
 var foodY = [17, 91, 17];
-
 $(document).ready(async function () {
     $("#searchInput").val("");
 
@@ -64,6 +63,11 @@ $(document).ready(async function () {
         getRated(),
         getCategories()
     ]);
+
+    contract.methods.users(acc).call().then(users => {
+        money = users.money;
+        $("#gold").text(money);
+    })
 
     role = res[0].value;
     updateList();
