@@ -104,10 +104,10 @@ function update_deliver() {
         workArray.forEach((index) => {
             if (index["user"] != "0x0000000000000000000000000000000000000000") {
                 const template = document.importNode(document.getElementById("deliverWorkTemplate").content, true);
-                $("#itemName", template).text(index["name"]);
+                $("#itemName", template).text(`商品名稱：${index["name"]}`);
                 //console.log(index["money"]);
-                $("#itemValue", template).text(`${index["money"]}元`);
-                $("#itemDest", template).text(`(${index["To"].x},${index["To"].y})`);
+                $("#itemValue", template).text(`價格：${index["money"]}元`);
+                $("#itemDest", template).text(`位置：(${index["To"].x},${index["To"].y})`);
                 $("#button", template).html(`<button type="button" class="btn btn-secondary getWork" id="${index["cnt_num"]}">接單</button>`);
                 deliverContainer.append(template);
                 deliverhasResult = true;
