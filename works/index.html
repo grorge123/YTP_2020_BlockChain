@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)https://getbootstrap.com/docs/4.0/examples/album/# -->
+<html>
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Works List</title>
+        
+        <!-- css -->
+        <link href="/css/works.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="/css/album.css" rel="stylesheet">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    
+        <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+        <script src="/js/config.js"></script>
+        <script src="/js/connect.js"></script>
+
+        <script defer src="/js/hint.js"></script>
+        <script defer src="/js/works.js"></script>
+    </head>
+    <body>
+
+        <header>
+        <div class="bg-dark collapse" id="navbarHeader">
+            <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-md-7 py-4">
+                    <h4 class="text-white">介紹</h4>
+                    <p class="text-muted">這是一個去中心化美食外送的系統<br>如果你支持本系統，歡迎小額贊助</p>
+                    <h4 class="text-white">你的帳戶</h4>
+                    <button type="button" hidden="true" class="btn btn-primary btn-sm guest" id="connect">Connect with MetaMask</button>
+                    <p id="account" class="text-muted">Loading...</p>
+                    
+                    <h4 class="text-white">你的身分</h4>
+                    <p id="role" class="text-muted">Loading...</p>
+                    <h4 class="text-white">帳戶金額</h4>
+                    <p id="gold" class="text-muted">Loading...</p>
+                </div>
+                <div class="col-sm-4 offset-md-1 py-4">
+                <h4 class="text-white">Navigate</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="/works" class="text-white">Works</a></li>
+                        <li><a href="/works/#my" class="text-white">My Works</a></li>
+                        <li><a href="/upload" class="text-white">Submit Work</a></li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex justify-content-between">
+            <a href="/works" class="navbar-brand d-flex align-items-center">
+                 <strong>去中心化平台實作系統</strong>
+            </a>
+            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            </div>
+        </div>
+        </header>
+
+
+        <!--Header end-->
+        <br>
+        <main role="main">
+        <div class="onlycustomer" hidden="true">
+            <div class="d-flex justify-content-center h-100">
+                <div class="searchbar">
+                    <input class="search_input" type="text" name="" id="searchInput" placeholder="Search...">
+                    <a class="search_icon"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="container">
+                <br>
+                <div class="row" id="worksContainer">
+                    <div class="col-md" id="loading">
+                        <h3 id="loadingTxt">Loading...</h3>
+                    </div>
+                    <template id="workTemplate">
+                        <div class="col-md-4 work">
+                            <div class="card mb-4 box-shadow">
+                                <div class="card-body">
+                                    <img class="card-img-top" id="image" style="height: 225px; width: 100%;" src="">
+                                    <h5 class="card-title" id="title"></h5>
+                                    <p class="card-text" style="white-space: pre-line" id="desc"></p>
+                                    <h5 class="card-text" id="value"></h5>
+                                    <h5 class="card-text" id="location"></h5>
+                                    <div class="flex" id="amount"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                </div>
+            </div>
+            <div class="container">
+            <div class="row g-0">
+                <div class="pb-3 col-6 col-md-3 bg-light">單號</div>
+                <div class="pb-3 col-6 col-md-2">所在位置</div>
+                <div class="pb-3 col-6 col-md-3 bg-light">商品名稱</div>
+                <div class="pb-3 col-6 col-md-2">金額</div>
+                <div class="pb-3 col-6 col-md-2 bg-light">狀態</div>
+            </div>
+            <div class="row g-0" id="deliverlist">
+            <template id="deliverlists">
+                <div class="col-6 col-md-3 bg-light pb-3" id="orderID"></div>
+                <div class="col-6 col-md-2 pb-3" id="orderLocate"></div>
+                <div class="col-6 col-md-3 bg-light pb-3" id="orderName"></div>
+                <div class="col-6 col-md-2 pb-3" id="orderMoney"></div>
+                <div class="col-6 col-md-2 bg-light pb-3" id="orderStatus"></div>
+            </template>
+            </div>
+            </div>
+        </div>
+        <br>
+        <!--customer end-->
+
+        <div class="onlydeliver" hidden="true">
+            <div class="container">
+                <div class="row">
+                <h4 class="col md-2" id="nowLocation">目前位置：</h4>
+                <button type="button" class="me-md-2 col btn btn-info updateLocation">手動更新位置</button>
+                <button type="button" class="me-md-2 col btn btn-info autoUpdateLocation">自動更新位置</button>  
+                </div>
+            </div>
+            <br>
+            <div class="d-flex justify-content-center h-100">
+                <div class="searchbar">
+                    <input class="search_input" type="text" name="" id="searchInput" placeholder="Search...">
+                    <a class="search_icon"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="container">
+                
+                <br>
+                <div class="row" id="deliverContainer">
+                    
+                    <br>
+                    <div class="col-md" id="deliverloading">
+                        <h3 id="deliverloadingTxt">Loading...</h3>
+                    </div>
+                    
+                    <template id="deliverWorkTemplate">
+                        <div class="col-md-4 work">
+                            <div class="card mb-4 box-shadow">
+                                <div class="card-body">
+                                    <h5 class="card-text" id="itemName"></h5>
+                                    <h5 class="card-text" id="itemValue"></h5>
+                                    <h5 class="card-text" id="itemDest"></h5>
+                                    <div class="card-text" id="button"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                </div>
+            </div>
+            <div class="container">
+            <div class="row g-0">
+                <div class="pb-3 col-6 col-md-3 bg-light">單號</div>
+                <div class="pb-3 col-6 col-md-2">所在位置</div>
+                <div class="pb-3 col-6 col-md-3 bg-light">商品名稱</div>
+                <div class="pb-3 col-6 col-md-2">金額</div>
+                <div class="pb-3 col-6 col-md-2 bg-light">狀態</div>
+            </div>
+            <div class="row g-0" id="delivers-list">
+            <template id="delivers-lists">
+                <div class="col-6 col-md-3 bg-light pb-3" id="deliverOrderID"></div>
+                <div class="col-6 col-md-2 pb-3" id="deliverOrderLocate"></div>
+                <div class="col-6 col-md-3 bg-light pb-3" id="deliverOrderName"></div>
+                <div class="col-6 col-md-2 pb-3" id="deliverOrderMoney"></div>
+                <div class="col-6 col-md-2 bg-light pb-3" id="deliverOrderStatus"></div>
+            </template>
+            </div>
+            </div>
+        </div>
+        <script>
+        function show() {
+            for(var i = 0; i < 100; i++) {
+                if (role == "customer" || role == "guest") {
+                    $(".onlycustomer").removeAttr("hidden");
+                } else if (role == "deliver") {
+                    $(".onlydeliver").removeAttr("hidden");
+                } 
+            }
+        }
+        setTimeout(show, 1000)
+        </script>
+        <!--
+        <div class="album py-5 bg-light">
+            <div class="d-flex justify-content-center h-100">
+                <div class="searchbar">
+                    <input class="search_input" type="text" name="" id="searchInput" placeholder="Search...">
+                    <a class="search_icon"><i class="fa fa-search"></i></a>
+                </div>
+            </div>
+            <div class="container">
+            <br>
+            <div class="row" id="worksContainer">
+                <div class="col-md" id="loading">
+                    <h3 id="loadingTxt">Loading...</h3>
+                </div>
+                <template id="workTemplate">
+                    <div class="col-md-4 work">
+                        <div class="card mb-4 box-shadow">
+                            <img class="card-img-top" id="image" style="height: 225px; width: 100%; display: block; object-fit: cover;" src="" data-holder-rendered="true">
+                            <div class="card-body">
+                                <h5 class="card-title" id="title"></h5>
+                                <p class="card-text" style="white-space: pre-line" id="desc"></p>
+
+                                
+
+                                <h5><div class="align-items-center" id="types">
+                                    
+                                </div></h5>
+                                
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-text" id="amount"></h5>
+                                    <div class="btn-group">
+                                       <button type="button" class="btn btn-sm btn-outline-secondary onlyRater rateBtn" hidden="true">Judge</button>
+                                    </div>
+                                    <h3><span class="badge badge-light ratingBadge" id="rating"></span></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+            </div>
+            </div>
+        </div>
+        -->
+        </main>
+
+        
+        
+    </body>
+</html>

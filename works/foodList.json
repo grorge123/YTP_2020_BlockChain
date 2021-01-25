@@ -1,0 +1,34 @@
+[
+	{
+		"foodTitle" : "蘋果",
+		"foodDescript" : "又大又紅的蘋果，看起來好像很好吃的樣子",
+		"foodValue" : 20,
+		"foodSrc" : "../img/apple.png",
+		"foodX" : 10,
+		"foodY" : 17
+	},
+	{
+		"foodTitle" : "西瓜",
+		"foodDescript" : "一顆圓圓的西瓜，就這樣",
+		"foodValue" : 30,
+		"foodSrc" : "../img/watermelon.png",
+		"foodX" : 20,
+		"foodY" : 91
+	},
+	{
+		"foodTitle" : "永和米漿",
+		"foodDescript" : "絕對不是業配，目前絕對不是",
+		"foodValue" : 76,
+		"foodSrc" : "../img/ricedrink.png",
+		"foodX" : 50,
+		"foodY" : 17
+	},
+	{
+		"foodTitle" : "Iphone 200 MAX PRO PLUS",
+		"foodDescript" : "貴到溢位，而且因為環保所以什麼都沒有附贈，包括手機",
+		"foodValue" : 10000000000,
+		"foodSrc" : "",
+		"foodX" : 400,
+		"foodY" : 200
+	}
+]
