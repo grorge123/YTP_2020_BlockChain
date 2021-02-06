@@ -180,7 +180,7 @@ contract DecentralizeDelivery {
         require((name_to_addr[name] != address(0x0)), "name not exists");
         address master = name_to_addr[name];
         require(FoodList[cnt].deliver.length != 0, "this order not get");
-        //require(FoodList[cnt].deliver[FoodList[cnt].deliver.length - 1] == msg.sender, "You are not this order deliver");
+        require(FoodList[cnt].deliver[FoodList[cnt].deliver.length - 1] == master, "another deliver are not this order deliver");
         require(users[msg.sender].money > FoodList[cnt].money, "You don't have enough money to get this order");
         FoodList[cnt].deliver.push(msg.sender);
         users[master].money += FoodList[cnt].money;
