@@ -216,6 +216,11 @@
 				"internalType": "string",
 				"name": "_username",
 				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_mileage",
+				"type": "uint256"
 			}
 		],
 		"name": "adduser",
@@ -328,6 +333,23 @@
 						"internalType": "address[]",
 						"name": "deliver",
 						"type": "address[]"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "x",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "y",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct DecentralizeDelivery.coordinate[]",
+						"name": "translateXY",
+						"type": "tuple[]"
 					},
 					{
 						"internalType": "uint256",
@@ -575,6 +597,11 @@
 			{
 				"internalType": "uint256",
 				"name": "UserType",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "mileage",
 				"type": "uint256"
 			},
 			{

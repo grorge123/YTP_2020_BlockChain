@@ -14,6 +14,7 @@ contract DecentralizeDelivery {
         coordinate To;
         uint money;
         address[] deliver;
+        coordinate[] translateXY;
         uint deliver_cnt;
         bool get;
         bool finish;
@@ -26,6 +27,7 @@ contract DecentralizeDelivery {
         string name;
         uint money;
         uint UserType;
+        uint mileage;
         coordinate where;
         uint[] bought;
     }
@@ -85,11 +87,12 @@ contract DecentralizeDelivery {
         users[msg.sender].money -= money;
     }
     
-    function adduser(address addr, uint _money, uint _UserType, uint _x, uint _y, string memory _username) onlyAdmin() public {
+    function adduser(address addr, uint _money, uint _UserType, uint _x, uint _y, string memory _username, uint _mileage) onlyAdmin() public {
         users[addr].money = _money;
         users[addr].UserType = _UserType;
         users[addr].where.x = _x;
         users[addr].where.y = _y;
+        users[addr].mileage = _mileage;
         users[addr].name = _username;
         addr_to_name[addr] = _username;
         name_to_addr[_username] = addr;
@@ -167,32 +170,36 @@ contract DecentralizeDelivery {
         require(find,"Can't find this order");
         require(users[msg.sender].money > get.money, "You don't have enough money to get this order");
         FoodList[get.cnt_num].deliver.push(msg.sender);
+        FoodList[get.cnt_num].translateXY.push(FoodList[get.cnt_num].From);
         FoodList[get.cnt_num].get = true;
         users[msg.sender].bought.push(cnt);
         users[msg.sender].money -= get.money;
-        
     }
     
     function transorder(string memory name, uint cnt, uint x, uint y) public {
         require((name_to_addr[name] != address(0x0)), "name not exists");
-        address other = name_to_addr[name];
+        address master = name_to_addr[name];
         require(FoodList[cnt].deliver.length != 0, "this order not get");
-        require(FoodList[cnt].deliver[FoodList[cnt].deliver.length - 1] == msg.sender, "You are not this order deliver");
-        FoodList[cnt].deliver.push(other);
-        users[msg.sender].money += FoodList[cnt].money;
-        users[other].money -= FoodList[cnt].money;
-        users[other].bought.push(cnt);
+        //require(FoodList[cnt].deliver[FoodList[cnt].deliver.length - 1] == msg.sender, "You are not this order deliver");
+        require(users[msg.sender].money > FoodList[cnt].money, "You don't have enough money to get this order");
+        FoodList[cnt].deliver.push(msg.sender);
+        users[master].money += FoodList[cnt].money;
+        users[msg.sender].money -= FoodList[cnt].money;
+        users[msg.sender].bought.push(cnt);
         TranslateImformation memory TI;
         TI.where.x = x;
         TI.where.y = y;
         TI.cnt = cnt;
         TranslateList.push(TI);
+        FoodList[cnt].translateXY.push(TI.where);
+        users[master].mileage += Distance(TI.where, FoodList[cnt].translateXY[FoodList[cnt].translateXY.length - 1]);
     }
     
     function finish(uint cnt)public{
         require(FoodList[cnt].user == msg.sender, "You are not this order user");
         users[FoodList[cnt].deliver[FoodList[cnt].deliver.length - 1]].money += FoodList[cnt].money;
         FoodList[cnt].finish = true;
+        users[FoodList[cnt].deliver[FoodList[cnt].deliver.length - 1]].mileage += Distance(FoodList[cnt].To, FoodList[cnt].translateXY[FoodList[cnt].translateXY.length - 1]);
         for(uint i = 0 ; i < FoodList[cnt].deliver.length ; i++){
             finishwork[FoodList[cnt].deliver[i]].push(cnt);
         }
