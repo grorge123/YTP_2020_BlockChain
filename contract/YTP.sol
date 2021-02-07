@@ -191,8 +191,8 @@ contract DecentralizeDelivery {
         TI.where.y = y;
         TI.cnt = cnt;
         TranslateList.push(TI);
-        FoodList[cnt].translateXY.push(TI.where);
         users[master].mileage += Distance(TI.where, FoodList[cnt].translateXY[FoodList[cnt].translateXY.length - 1]);
+        FoodList[cnt].translateXY.push(TI.where);
     }
     
     function finish(uint cnt)public{
