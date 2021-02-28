@@ -437,7 +437,7 @@ $(document).on("click", ({ target }) => {
             },
             inputValue: 5
         }).then((rating) => {
-            contract.methods.finish(id, rating).send({
+            contract.methods.finish(id, rating.value).send({
                 from: acc
             }).once('transactionHash', (hash) => {
                 $(Swal.getFooter()).html(`<div style="text-align: center;"><a>Your trasaction is being processed...</a><br><a href="https://ropsten.etherscan.io/tx/${hash}">View transaction on Etherscan</a></div>`).attr("style", "display: flex;")
