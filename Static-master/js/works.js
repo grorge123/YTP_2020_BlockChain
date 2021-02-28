@@ -291,11 +291,14 @@ async function getRoles() {
         } else if (res.UserType == 2) {
             role = "deliver";
             $("#role").text("deliver");
-            if (res.bought.length() == 0) {
-                $("#scoring").text('尚未評分');
-            } else {
-                $("#scoring").text(res.star / res.bought.length());
-            }
+            contract.methods.getbought(acc).call().then((bought) => {
+                console.log(bought);
+                if (bought.length == 0) {
+                    $("#scoring").text('尚未評分');
+                } else {
+                    $("#scoring").text(res.star / bought.length);
+                }
+            })
         }
     });
     return role;
