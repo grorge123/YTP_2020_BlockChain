@@ -82,9 +82,9 @@ $(document).ready(async function () {
         contract.methods.users(acc).call().then(users => {
             money = users.money;
             $("#gold").text(money);
-            if( users.UserType == 2 ){
+            if (users.UserType == 2) {
                 $('#mileage').text(users.mileage);
-            }else{
+            } else {
                 $('#mileage').text("你不是外送員!");
             }
         })
@@ -283,12 +283,19 @@ async function getRoles() {
         if (res.UserType == 0) {
             role = "guest";
             $("#role").text("guest");
+            $("#scoring").text('非外送人員');
         } else if (res.UserType == 1) {
             role = "customer";
             $("#role").text("customer");
+            $("#scoring").text('非外送人員');
         } else if (res.UserType == 2) {
             role = "deliver";
             $("#role").text("deliver");
+            if (res.bought.length() == 0) {
+                $("#scoring").text('尚未評分');
+            } else {
+                $("#scoring").text(res.star / res.bought.length());
+            }
         }
     });
     return role;
@@ -415,39 +422,51 @@ $(document).on("click", ({ target }) => {
         });
     } else if ($(target).hasClass("finishBuy")) {
         var id = target.id;
-        contract.methods.finish(id).send({
-            from: acc
-        })
-            .once('transactionHash', (hash) => {
+        Swal.fire({
+            title: '你對於此筆訂單之評分',
+            icon: 'question',
+            input: 'range',
+            inputLabel: 'scoring',
+            inputAttributes: {
+                min: 0,
+                max: 5,
+                step: 1
+            },
+            inputValue: 5
+        }).then((rating) => {
+            contract.methods.finish(id, rating).send({
+                from: acc
+            }).once('transactionHash', (hash) => {
                 $(Swal.getFooter()).html(`<div style="text-align: center;"><a>Your trasaction is being processed...</a><br><a href="https://ropsten.etherscan.io/tx/${hash}">View transaction on Etherscan</a></div>`).attr("style", "display: flex;")
             })
-            .then((receipt) => {
-                console.log(receipt)
-                Swal.fire({
-                    icon: 'success',
-                    text: '訂單成功完成',
-                    footer: `<a href="https://ropsten.etherscan.io/tx/${receipt.transactionHash}">View transaction on Etherscan</a>`
-                }).then(() => {
-                    location.href = "/works"
-                })
-            })
-            .catch((err) => {
-                console.log(err);
-                if (err.code == 4001) { // User denied
-                    Swal.showValidationMessage(
-                        "你取消完成"
-                    )
-                } else {
-                    Swal.showValidationMessage(
-                        "交易失敗!!!<br>View transaction on Etherscan for details"
-                    )
+                .then((receipt) => {
+                    console.log(receipt)
                     Swal.fire({
-                        icon: 'error',
-                        text: '交易失敗!!',
-                        footer: `<a href="https://ropsten.etherscan.io/tx/${err.transactionHash}">View on Etherscan for more details</a>`
+                        icon: 'success',
+                        text: '訂單成功完成',
+                        footer: `<a href="https://ropsten.etherscan.io/tx/${receipt.transactionHash}">View transaction on Etherscan</a>`
+                    }).then(() => {
+                        location.href = "/works"
                     })
-                }
-            });
+                })
+                .catch((err) => {
+                    console.log(err);
+                    if (err.code == 4001) { // User denied
+                        Swal.showValidationMessage(
+                            "你取消完成"
+                        )
+                    } else {
+                        Swal.showValidationMessage(
+                            "交易失敗!!!<br>View transaction on Etherscan for details"
+                        )
+                        Swal.fire({
+                            icon: 'error',
+                            text: '交易失敗!!',
+                            footer: `<a href="https://ropsten.etherscan.io/tx/${err.transactionHash}">View on Etherscan for more details</a>`
+                        })
+                    }
+                });
+        })
     } else if ($(target).hasClass("translate")) {
         var id = target.id;
         Swal.fire({
