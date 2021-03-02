@@ -261,7 +261,7 @@ function updateList(search) {
             })
         })
     } else if (role == "guest") {
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < foodSrc.length; i++) {
             const template = document.importNode(document.getElementById("workTemplate").content, true);
             $("#title", template).text(foodTitle[i]);
             $("#desc", template).text(foodDescript[i]);
