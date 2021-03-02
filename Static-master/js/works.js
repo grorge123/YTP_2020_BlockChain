@@ -78,17 +78,7 @@ $(document).ready(async function () {
         getRated(),
         getCategories()
     ]);
-    $.get('/food.json', async(js)=>{
-        for(let i = 0 ; i < js.length ; i++){
-            foodTitle.push(js[i]["foodTitle"])
-            foodDescript.push(js[i]["foodDescript"])
-            foodValue.push(js[i]["foodValue"])
-            foodSrc.push(js[i]["foodSrc"])
-            foodX.push(js[i]["foodX"])
-            foodY.push(js[i]["foodY"])
-        }
-        updateList();
-    })
+    
     if (await getAccount()) {
         contract.methods.users(acc).call().then(users => {
             money = users.money;
@@ -105,6 +95,22 @@ $(document).ready(async function () {
     } else {
         role = "guest";
     }
+	console.log('start get')
+	$.get('/food.json', async(js)=>{
+        console.log('getting')
+		for(let i = 0 ; i < js.length ; i++){
+            foodTitle.push(js[i]["foodTitle"])
+            foodDescript.push(js[i]["foodDescript"])
+            foodValue.push(js[i]["foodValue"])
+            foodSrc.push(js[i]["foodSrc"])
+            foodX.push(js[i]["foodX"])
+            foodY.push(js[i]["foodY"])
+        }
+		console.log('updating')
+        updateList();
+		console.log('finish')
+    })
+	console.log('end get')
 })
 let deliverhasResult = false;
 function update_deliver() {
@@ -163,7 +169,7 @@ function updateList(search) {
     const my = window.location.hash.split("#")[1] == "my";
     const container = $("#worksContainer");
     container.find(".work").remove();
-
+    // $("#delivers-list").remove();
     let hasResult = false;
     if (role == "customer") {
         for (var i = 0; i < foodSrc.length; i++) {
