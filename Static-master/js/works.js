@@ -88,7 +88,6 @@ $(document).ready(async function () {
             foodY.push(js[i]["foodY"])
         }
         updateList();
-        
     })
     if (await getAccount()) {
         contract.methods.users(acc).call().then(users => {
@@ -102,10 +101,9 @@ $(document).ready(async function () {
         })
 
         role = res[0].value;
-        updateList();
+        
     } else {
         role = "guest";
-        updateList();
     }
 })
 let deliverhasResult = false;
