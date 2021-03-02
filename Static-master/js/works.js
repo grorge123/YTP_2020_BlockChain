@@ -78,6 +78,17 @@ $(document).ready(async function () {
         getRated(),
         getCategories()
     ]);
+    $.get('/food.json', (js)=>{
+        for(let i = 0 ; i < js.length ; i++){
+            foodTitle.push(js[i]["foodTitle"])
+            foodDescript.push(js[i]["foodDescript"])
+            foodValue.push(js[i]["foodValue"])
+            foodSrc.push(js[i]["foodSrc"])
+            foodX.push(js[i]["foodX"])
+            foodY.push(js[i]["foodY"])
+            
+        }
+    })
     if (await getAccount()) {
         contract.methods.users(acc).call().then(users => {
             money = users.money;
@@ -156,7 +167,7 @@ function updateList(search) {
 
     let hasResult = false;
     if (role == "customer") {
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < foodSrc.length; i++) {
             const template = document.importNode(document.getElementById("workTemplate").content, true);
             $("#title", template).text(foodTitle[i]);
             $("#desc", template).text(foodDescript[i]);
