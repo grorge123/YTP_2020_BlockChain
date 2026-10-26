@@ -1,4 +1,7 @@
 
+// Default MetaMask account, shared with the page scripts
+let acc;
+
 // Request to connect with MetaMask
 // Returns bool: Connected or not
 // If connected, acc will be set to the default account
@@ -41,7 +44,7 @@ async function requestAccount() {
     })
     if (err) return false;
     
-    checkNetwork();
+    await checkNetwork();
 
     return true;
 }
@@ -49,7 +52,7 @@ async function requestAccount() {
 
 // Pop alert until the network ID is correct
 async function checkNetwork() {
-    while (window.ethereum.chainId != 3) {
+    while (parseInt(window.ethereum.chainId, 16) !== 3) {
         console.log("Please connect to the Ropsten Testnet!");
         await Swal.fire({
             icon: 'warning',
