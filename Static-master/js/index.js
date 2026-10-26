@@ -8,13 +8,13 @@ if (window.ethereum) {
 }
 
 $(document).ready(() => {
-    $("#connect").on("click", async (e) => {
+    $("#connect").on("click", async () => {
         if (await requestAccount()) {
             location.href = "/works";
         }
     })
     
-    $("#continue").on("click", (e) => {
+    $("#continue").on("click", () => {
         location.href = "/works";
     })
 })

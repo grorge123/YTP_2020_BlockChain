@@ -1,17 +1,18 @@
-import requests as re
+import requests
 from bs4 import BeautifulSoup
 import json
 import random
 
 url = 'https://fc.efoodex.net/portal.php?oid='
+TARGET_COUNT = 30
 
 idx = 156566
 # idx = 152264
 
 output = []
-while len(output) < 30 :
+while len(output) < TARGET_COUNT:
     print(idx, len(output))
-    now = re.get(url + str(idx))
+    now = requests.get(url + str(idx), timeout=10)
     if now.text != 'No Data':
         print('get')
         soup = BeautifulSoup(now.text, 'html.parser')
@@ -38,9 +39,9 @@ with open('food.json', 'w', encoding='utf-8') as js:
     data = []
     for i in output:
         data.append({
-            'foodTitle': i[0],\
-            'foodDescript': i[1],\
-            'foodValue': random.randint(10, 100),\
+            'foodTitle': i[0],
+            'foodDescript': i[1],
+            'foodValue': random.randint(10, 100),
             'foodSrc' : i[2],
             'foodX' : random.randint(0, 30),
             'foodY' : random.randint(0, 30)
